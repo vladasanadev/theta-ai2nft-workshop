@@ -1,0 +1,25 @@
+/**
+ * Global styles for the AI to NFT Workshop application
+ * Contains only essential base styles that apply to the entire application
+ */
+
+/* Global box-sizing reset */
+* {
+  box-sizing: border-box;
+}
+
+/* Base body styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Code elements styling */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+} 
