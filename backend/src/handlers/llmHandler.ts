@@ -49,7 +49,7 @@ async function makeLLMRequest(messages: CleanMessage[]): Promise<LLMResponse> {
     // TODO: Replace this hardcoded response with actual EdgeCloud API call
     // REMOVE the return statement below and implement the fetch request
     return {
-      output: { message: 'Hello, world!' },
+      output: { message: 'Hello, no LLM response is implemented yet' },
       input: { messages: messages }
     };
 
