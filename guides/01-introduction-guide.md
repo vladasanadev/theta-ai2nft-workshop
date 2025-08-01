@@ -11,6 +11,8 @@ You'll create an **AI to NFT Workshop** application that:
 - **Processes conversations** with an intelligent AI assistant
 - **Interact with the Theta Blockchain** Mints NFTs automatically from generated images
 
+<img src="./images/workshop-result.png" alt="Llama 3.1 and Flux.1-schnell" width="600"/>
+
 ## 🛠️ Technologies We'll Use
 
 ### **Theta EdgeCloud** ([`thetaedgecloud.com`](thetaedgecloud.com))
