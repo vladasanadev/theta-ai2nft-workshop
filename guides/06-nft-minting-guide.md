@@ -622,7 +622,7 @@ In the final guide, you'll explore advanced AI capabilities:
 - **RAG Chat API** - Implement knowledge-based LLMs with Retrieval-Augmented Generation
 - **Community Node Hosting** - Host your own LLM (Deepseek) on Theta EdgeCloud Community Nodes
 
-**Ready to unlock advanced AI capabilities?** Let's move on to [**Guide 7: Advanced Features & Customization**](./07-advanced-features-customization.md)!
+**Ready to unlock advanced AI capabilities?** Let's move on to [**Guide 7: Advanced Features & Customization**](./07-advanced-challenges-guide.md)!
 
 ---
 
