@@ -13,7 +13,7 @@ You'll create an **AI to NFT Workshop** application that:
 
 ## 🛠️ Technologies We'll Use
 
-### **Theta EdgeCloud** (`thetaedgecloud.com`)
+### **Theta EdgeCloud** ([`thetaedgecloud.com`](thetaedgecloud.com))
 - **LLM Integration**: Llama 3.1 70B Instruct for intelligent conversation handling
 - **Image Generation**: Flux.1-schnell for creating stunning AI-generated artwork
 - **Scalable AI Infrastructure**: Enterprise-grade AI models without the complexity
@@ -39,18 +39,18 @@ While we'll touch on all aspects of the application, **our main focus will be on
 - Learning objectives and prerequisites
 - Repository structure and setup
 
-#### **🔧 Guide 2: EdgeCloud Setup** (`02-edgecloud-guide.md`)
+#### **🔧 Guide 2: EdgeCloud Setup** ([`02-edgecloud-guide.md`](./02-edgecloud-guide.md))
 - Setting up your Theta EdgeCloud account
 - Understanding API authentication and endpoints
 - Configuring your development environment
 
-#### **💬 Guide 3: Chat Integration** (`03-chat-integration-guide.md`)
+#### **💬 Guide 3: Chat Integration** ([`03-chat-integration-guide.md`](./03-chat-integration-guide.md))
 - **LLM Integration**: Implementing Llama 3.1 70B Instruct for:
   - Intelligent conversation handling
   - Intent detection for image generation requests
 - Backend API development for chat functionality
 
-#### **🎨 Guide 4: Image Generation** (`04-image-generation-guide.md`)
+#### **🎨 Guide 4: Image Generation** ([`04-image-generation-guide.md`](./04-image-genearation-guide.md))
 - **Image Generation**: Integrating Flux.1-schnell for:
   - Text-to-image generation
   - Prompt optimization and processing
@@ -67,7 +67,7 @@ While we'll touch on all aspects of the application, **our main focus will be on
 - **Metadata Management**: Properly structuring NFT metadata
 - **Transaction Handling**: Managing blockchain operations
 
-#### **🎨 Guide 7: Advanced Features & Customization** ([`07-advanced-features-customization.md`]())
+#### **🎨 Guide 7: Advanced Challlenges** ([`07-advanced-features-customization.md`](./07-advanced-challenges-guide.md))
 - **Wallet Integration**: Seamless Web3 wallet connections
 - **Error Handling**: Robust error management across the stack
 - **Performance Optimization**: Scaling for production use
