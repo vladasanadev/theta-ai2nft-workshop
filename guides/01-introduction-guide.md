@@ -79,7 +79,7 @@ While we'll touch on all aspects of the application, **our main focus will be on
 
 By completing this workshop, you will:
 
-✅ **Master Theta EdgeCloud Integration** - Learn to leverage AI models on the Theta EdgeCloud 
+✅ **Master Theta EdgeCloud Integration** - Learn to leverage AI models on the Theta EdgeCloud   
 ✅ **Deploy Smart Contracts** - Understand blockchain development lifecycle  
 ✅ **Implement AI Workflows** - Connect multiple AI services seamlessly  
 ✅ **Create Full-Stack Applications** - Build complete web3 applications  
