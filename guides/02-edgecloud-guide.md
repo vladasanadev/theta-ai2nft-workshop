@@ -137,20 +137,19 @@ curl -X POST "https://ondemand.thetaedgecloud.com/infer_request/llama_3_1_70b/co
 
    ```env
    # =============================================
+   # EdgeCloud Configuration  
+   # =============================================
+
+   # Theta EdgeCloud On-Demand API Token
+   ON_DEMAND_API_ACCESS_TOKEN=your-on-demand-api-token-here
+
+   # =============================================
    # LLM (Language Model) Configuration
    # =============================================
+   # Theta EdgeCloud LLM API URL
    LLM_URL=https://ondemand.thetaedgecloud.com/infer_request/llama_3_1_70b/completions
-   ON_DEMAND_API_ACCESS_TOKEN=YOUR_ACCESS_TOKEN_HERE
 
-   # =============================================
-   # Image Generation Configuration  
-   # =============================================
-   ON_DEMAND_API_ACCESS_TOKEN=YOUR_ACCESS_TOKEN_HERE
-   IMAGE_URL=https://ondemand.thetaedgecloud.com/infer_request/flux
-
-   # =============================================
-   # Optional: LLM Parameters (defaults provided)
-   # =============================================
+   # LLM Parameters (optional - defaults provided)
    TEMPERATURE=0.7
    TOP_P=0.9
    MAX_TOKENS=1000

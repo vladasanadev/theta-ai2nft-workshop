@@ -403,17 +403,6 @@ totalSupply()
 - **name() & symbol()**: Verifies contract metadata
 - **totalSupply()**: Shows current NFT count (should be 0)
 
-### **7.2 Pre-Minting Checklist**
-
-Before connecting your backend, verify:
-
-- [ ] **Contract deployed successfully** - You have a contract address
-- [ ] **Contract verified** - Source code visible on explorer
-- [ ] **You are the owner** - `owner()` returns your address
-- [ ] **Functions work** - Read functions return expected values
-- [ ] **Testnet TFUEL available** - You have gas for future minting
-- [ ] **ABI and address saved** - You'll need these for backend integration
-
 ---
 
 ## 🔧 Step 8: Troubleshooting Common Issues
@@ -467,37 +456,16 @@ Before connecting your backend, verify:
 
 ---
 
-## ✅ Comprehensive Verification Checklist
+## ✅ Verification Checklist
 
 Before proceeding to NFT minting, ensure all these items are complete:
 
-### **Contract Development**
-- [ ] Contract compiled successfully in Remix
-- [ ] ABI and bytecode extracted and saved
-- [ ] Source code is the flattened version from repository
-
-### **Wallet & Network Setup**
-- [ ] Theta Web Wallet created and secured
-- [ ] Switched to Theta testnet
-- [ ] Testnet TFUEL obtained from faucet
-- [ ] Wallet shows testnet network and balance
-
-### **Contract Deployment**
-- [ ] Contract deployed to Theta testnet
-- [ ] Contract address saved and documented
-- [ ] Deployment transaction confirmed on blockchain
-- [ ] You can view contract on Theta Explorer
-
-### **Contract Verification**
-- [ ] Contract verified on Theta Explorer
-- [ ] Source code visible and matches your deployment
-- [ ] Contract functions are readable in explorer interface
-
-### **Function Testing**
-- [ ] `owner()` returns your wallet address
-- [ ] `name()` returns "AI NFT"
-- [ ] `symbol()` returns "AINFT"
-- [ ] `totalSupply()` returns 0
+- [ ] **Contract compiled in Remix** – No errors, correct Solidity version (0.8.19)
+- [ ] **Theta Web Wallet created & secured** – Wallet backed up and accessible
+- [ ] **Testnet TFUEL received** – Faucet used, balance confirmed
+- [ ] **Contract deployed to Theta testnet** – Deployment transaction successful
+- [ ] **Contract visible on Theta Explorer** – Can view contract address and details
+- [ ] **Contract verified on Theta Explorer** – Source code published and verified
 
 ---
 

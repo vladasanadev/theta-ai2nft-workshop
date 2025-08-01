@@ -591,43 +591,16 @@ console.log(metadata);
 
 ---
 
-## ✅ Comprehensive Verification Checklist
+## ✅ Verification Checklist
 
-Before considering your AI2NFT system complete, verify:
-
-### **Environment Configuration**
-- [ ] Frontend `REACT_APP_IS_MINTING_ACTIVE=true`
-- [ ] Backend `NFT_CONTRACT` set to your deployed contract
-- [ ] Backend `WALLET_PATH` points to keystore file
-- [ ] Backend `WALLET_PASSWORD` is correct
-- [ ] Keystore file exists and is valid JSON
-
-### **Functionality Testing**
-- [ ] Chat system works (Guide 3)
-- [ ] Image generation works (Guide 4)
-- [ ] Wallet address detection works
-- [ ] Mint button appears on generated images
-- [ ] Minting process completes successfully
-- [ ] Transaction hash is returned
-
-### **Blockchain Verification**
-- [ ] Transaction appears on Theta Explorer
-- [ ] Contract `totalSupply()` increased
-- [ ] `tokenURI()` contains your metadata
-- [ ] Metadata decodes to valid JSON
-- [ ] Image URL is accessible
-
-### **Error Handling**
-- [ ] Invalid wallet addresses rejected
-- [ ] Insufficient balance errors handled gracefully
-- [ ] Failed transactions show helpful error messages
-- [ ] Frontend loading states work properly
-
-### **Security & Best Practices**
-- [ ] Keystore file not committed to git
-- [ ] Environment variables properly configured
-- [ ] Only contract owner can mint
-- [ ] Wallet addresses are validated
+- [ ] **Frontend configured** – `REACT_APP_IS_MINTING_ACTIVE=true`
+- [ ] **Backend configured** – `NFT_CONTRACT`, `WALLET_PATH` & `WALLET_PASSWORD` set
+- [ ] **Chat system works** – (Guide 3)
+- [ ] **Image generation works** – (Guide 4)
+- [ ] **Wallet address detection works**
+- [ ] **Mint button appears** – On generated images
+- [ ] **Minting completes** – Transaction hash returned
+- [ ] **Transaction visible** – On Theta Explorer
 
 ---
 

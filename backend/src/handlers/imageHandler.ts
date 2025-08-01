@@ -216,6 +216,36 @@ async function submitImageGenerationRequest(prompt: string): Promise<string> {
 }
 
 /**
+ * Checks the status of an image generation request
+ * @param requestId - ID of the image generation request
+ * @returns Promise resolving to the status information
+ * @throws {Error} If status check fails
+ */
+async function checkGenerationStatus(requestId: string): Promise<{ state: string; output?: { image_url: string }; error_message?: string }> {
+  const statusUrl = `${IMAGE_CONFIG.STATUS_URL_BASE}/${requestId}`;
+  const statusResponse = await fetch(statusUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${IMAGE_CONFIG.API_TOKEN}`
+    }
+  });
+
+  if (!statusResponse.ok) {
+    throw new Error(`Status check failed: ${statusResponse.status}`);
+  }
+
+  const statusJson = await statusResponse.json();
+  const statusInferRequest = statusJson.body?.infer_requests?.[0];
+  
+  if (!statusInferRequest) {
+    throw new Error('No infer request found in status response');
+  }
+  
+  return statusInferRequest;
+}
+
+/**
  * Polls for image generation results until completion or timeout
  * @param requestId - ID of the image generation request
  * @returns Promise resolving to the generated image URL
@@ -224,54 +254,19 @@ async function submitImageGenerationRequest(prompt: string): Promise<string> {
 async function pollForImageResult(requestId: string): Promise<string> {
   for (let attempt = 0; attempt < IMAGE_CONFIG.MAX_ATTEMPTS; attempt++) {
     await sleep(IMAGE_CONFIG.POLL_INTERVAL);
-
-    try {
-      const statusUrl = `${IMAGE_CONFIG.STATUS_URL_BASE}/${requestId}`;
-      const statusResponse = await fetch(statusUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${IMAGE_CONFIG.API_TOKEN}`
-        }
-      });
-
-      if (!statusResponse.ok) {
-        console.warn(`Status check failed (attempt ${attempt + 1}): ${statusResponse.status}`);
-        continue;
+    
+    const status = await checkGenerationStatus(requestId);
+    
+    if (status.state === 'success') {
+      if (!status.output?.image_url) {
+        throw new Error('Image generation completed but no image URL found');
       }
-
-      const statusJson = await statusResponse.json();
-      
-      // Extract the infer request from the response
-      const statusInferRequest = statusJson.body?.infer_requests?.[0];
-      if (!statusInferRequest) {
-        console.warn(`No infer request found in status response (attempt ${attempt + 1})`);
-        continue;
-      }
-      
-      const state = statusInferRequest.state;
-      
-      // Check if the request is complete
-      if (state === 'success') {
-        const output = statusInferRequest.output;
-        if (output?.image_url?.length > 0) {
-          return output.image_url;
-        } else {
-          throw new Error('Image generation completed but no image URL found in output');
-        }
-      } else if (state === 'failed') {
-        throw new Error(`Image generation failed: ${statusInferRequest.error_message || 'Unknown error'}`);
-      }
-      
-      // If still processing, continue polling
-    } catch (error) {
-      console.warn(`Polling attempt ${attempt + 1} failed:`, error);
-      // Continue to next attempt unless it's the last one
-      if (attempt === IMAGE_CONFIG.MAX_ATTEMPTS - 1) {
-        throw error;
-      }
+      return status.output.image_url;
+    } else if (status.state === 'failed') {
+      throw new Error(`Image generation failed: ${status.error_message || 'Unknown error'}`);
     }
+    // Otherwise: still processing, continue polling...
   }
-
+  
   throw new Error('Image generation timed out');
 }

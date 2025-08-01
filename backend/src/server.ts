@@ -36,7 +36,7 @@ app.use(express.json());
  * Response: { success: true, result: CompletionResult, latestNFT?: NFTInterface }
  */
 app.post('/chat', async (req, res) => {
-  try {
+  try { 
     const body: CompletionInput = req.body;
 
     // Validate request body

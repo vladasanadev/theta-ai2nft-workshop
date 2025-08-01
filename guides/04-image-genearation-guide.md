@@ -197,7 +197,7 @@ async function submitImageGenerationRequest(prompt) {
     })
   });
   
-  // Returns: { request_id: "abc123..." }
+  // Returns: request_id : string
 }
 ```
 
@@ -217,6 +217,30 @@ async function pollForImageResult(requestId) {
     }
     // Otherwise: still processing, continue polling...
   }
+}
+
+async function checkGenerationStatus(requestId: string): Promise<{ state: string; output?: { image_url: string }; error_message?: string }> {
+  const statusUrl = `${IMAGE_CONFIG.STATUS_URL_BASE}/${requestId}`;
+  const statusResponse = await fetch(statusUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${IMAGE_CONFIG.API_TOKEN}`
+    }
+  });
+
+  if (!statusResponse.ok) {
+    throw new Error(`Status check failed: ${statusResponse.status}`);
+  }
+
+  const statusJson = await statusResponse.json();
+  const statusInferRequest = statusJson.body?.infer_requests?.[0];
+  
+  if (!statusInferRequest) {
+    throw new Error('No infer request found in status response');
+  }
+  
+  return statusInferRequest;
 }
 ```
 

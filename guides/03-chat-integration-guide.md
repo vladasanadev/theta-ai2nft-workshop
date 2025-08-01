@@ -99,25 +99,71 @@ Let's examine the key components:
 
 ```javascript
 app.post('/chat', async (req, res) => {
-  // 1. Validate incoming request
-  const body: CompletionInput = req.body;
-  
-  // 2. Check for image generation request (we'll cover this in Guide 4)
-  const imageData = await handleGernarateImageCheck(body.messages);
-  
-  // 3. For now, we focus on general conversation
-  if (!imageData.image) {
-    // Check for wallet address (we'll cover this later)
-    const walletAddress = await filterWalletAddress(body.messages);
-    
-    if (!walletAddress) {
-      // 🎯 THIS IS WHERE WE ARE: General conversation
-      completionResult = await handleCompletion(body.messages);
+  try {
+    const body: CompletionInput = req.body;
+
+    // Validate request body
+    if (!body.messages || !Array.isArray(body.messages)) {
+      return res.status(400).json({ 
+        error: 'Invalid request: messages array is required' 
+      } as APIError);
     }
+
+    // Check if user wants to generate an image
+    const imageData = await handleGernarateImageCheck(body.messages);
+    let newNFT: NFTInterface | undefined;
+    let oldNFT: NFTInterface = body.nft || {image: '', prompt: '', wallet: ''};
+    let completionResult;
+
+    if (imageData.image) {
+      // Image was generated - create NFT and provide minting assistance
+      newNFT = {
+        image: imageData.image,
+        prompt: imageData.prompt!,
+        wallet: body.nft?.wallet || ''
+      };
+
+      completionResult = await handleCompletionWithNFT(body.messages, newNFT);
+    } else {
+      // No image generation - check for wallet address or handle general chat
+      const walletAddress = await filterWalletAddress(body.messages);
+      
+      if (walletAddress && typeof walletAddress === 'string') {
+        oldNFT.wallet = walletAddress;
+        // Wallet address detected - acknowledge and update
+        completionResult = {
+          output: {
+            message: API_RESPONSES.WALLET_UPDATE_SUCCESS(walletAddress)
+          },
+          input: body.messages
+        };
+      } else {
+        // General conversation
+        completionResult = await handleCompletion(body.messages);
+      }
+    }
+
+    // Prepare response with NFT data if available
+    const response: APISuccess = {
+      success: true,
+      result: {
+        output: {
+          ...completionResult.output,
+          ...(newNFT ? { nft: { image: newNFT.image, prompt: newNFT.prompt } } : {})
+        },
+        input: completionResult.input
+      },
+      latestNFT: newNFT || oldNFT
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('Chat endpoint error:', error);
+    res.status(500).json({ 
+      error: API_RESPONSES.ERRORS.SERVER_ERROR,
+      details: error instanceof Error ? error.message : 'Unknown error'
+    } as APIError);
   }
-  
-  // 4. Return formatted response to frontend
-  res.json(response);
 });
 ```
 
@@ -156,6 +202,10 @@ async function makeLLMRequest(messages: CleanMessage[]): Promise<LLMResponse> {
       }
     })
   });
+
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+  }
   
   // Parse and return EdgeCloud response
   const json = await response.json();
@@ -411,4 +461,4 @@ In the next guide, we'll add **Image Generation** capabilities where you'll:
 - Handle the complete image generation workflow
 - Connect images to the NFT creation process
 
-**Ready for more AI magic?** Let's move on to [**Guide 4: Image Generation**](./04-image-generation-guide.md)!
+**Ready for more AI magic?** Let's move on to [**Guide 4: Image Generation**](./04-image-genearation-guide.md)!
