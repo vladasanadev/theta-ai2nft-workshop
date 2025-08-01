@@ -79,6 +79,8 @@ function validateBlockchainConfig(): void {
   if (!BLOCKCHAIN_CONFIG.CONTRACT_ABI) {
     throw new Error('CONTRACT_ABI environment variable is not set');
   }
+
+  console.log('Contract address: ', BLOCKCHAIN_CONFIG.NFT_CONTRACT.slice(0, 6), '...');
 }
 
 /**
@@ -103,7 +105,9 @@ function parseContractABI(): any[] {
  * @throws {Error} If minting fails due to configuration, balance, or transaction issues
  */
 export async function mintNFT(nft: NFTInterface): Promise<string> {
+  console.log('Starting NFT mint process...');
   validateBlockchainConfig();
+  console.log('Recipient: ', nft.wallet.slice(0, 6), '...');
   
   // Load wallet from keystore
   const wallet = await loadWalletFromKeystore();
@@ -124,6 +128,7 @@ export async function mintNFT(nft: NFTInterface): Promise<string> {
 
   // Generate metadata and create contract instance
   const metadata = generateMetadata(nft);
+  console.log('Metadata length: ', metadata.length, ' characters');
   const contractABI = parseContractABI();
   
   const contract = new ethers.Contract(
@@ -134,9 +139,11 @@ export async function mintNFT(nft: NFTInterface): Promise<string> {
   
   // Execute minting transaction
   const tx = await contract.safeMint(nft.wallet, metadata);
+  console.log('Transaction submitted, waiting for confirmation...');
   
   // Wait for transaction confirmation
   await tx.wait();
+  console.log('Transaction confirmed: ', tx.hash);
   
   return tx.hash;
 }
