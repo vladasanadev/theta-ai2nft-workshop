@@ -80,7 +80,7 @@ We need AI to understand all these variations!
 
 ### **2.2 Custom Prompt Engineering**
 
-The system uses this carefully crafted prompt in `constants.ts`:
+The system uses this carefully crafted prompt in [`constants.ts`](../backend/src/constants.ts):
 
 ```javascript
 IMAGE_GENERATION_CHECK: JSON.stringify(`
@@ -100,6 +100,15 @@ If the message does NOT request or imply image generation, return:
 }
 `)
 ```
+
+> 💡 **Advanced Tip - Automatic Styling:** You can modify the prompt to automatically add consistent styling to all generated images! 
+>
+> **Example:** Change `"prompt": "<short clear prompt to generate the image>"` to:
+> - `"prompt": "<short clear prompt to generate the image>, black and white photography style"`
+> - `"prompt": "<short clear prompt to generate the image>, watercolor painting style"`  
+> - `"prompt": "<short clear prompt to generate the image>, cyberpunk neon aesthetic"`
+>
+> This way, every image will automatically have your chosen artistic style! 🎨
 
 ### **2.3 How Intent Detection Works**
 
@@ -175,33 +184,96 @@ The system uses these optimized settings:
 }
 ```
 
-### **3.3 The Generation Process**
+### **3.3 🔧 Your Implementation Challenge: Image Generation**
 
-#### **Step 1: Submit Request**
-```javascript
-async function submitImageGenerationRequest(prompt) {
-  const response = await fetch('https://ondemand.thetaedgecloud.com/infer_request/flux', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${IMAGE_CONFIG.API_TOKEN}`
-    },
-    body: JSON.stringify({
-      input: {
-        prompt: prompt,
-        guidance: 3.5,
-        height: 512,
-        width: 512,
-        num_steps: 4,
-        seed: generateRandomSeed()
+#### **Step 1: 🔧 Update Chat Endpoint Integration**
+
+**Open [`backend/src/server.ts`](../backend/src/server.ts) and enhance the `/chat` endpoint:**
+
+**Your mission:**
+1. **Add image generation check** - Call `handleGernarateImageCheck()` with user messages
+2. **Handle image results** - If image is generated, create NFT object and call `handleCompletionWithNFT()`
+3. **Include NFT data** - Add NFT data to the response when available
+4. **Keep existing logic** - Maintain normal chat flow for non-image requests
+
+**Key integration points:**
+- Import: `handleGernarateImageCheck` from `./handlers/imageHandler`
+- Import: `handleCompletionWithNFT` from `./handlers/nftHandler` 
+- Check: `if (imageData.image)` to determine if image was generated
+- Response: Include `nft: { image, prompt }` in successful responses
+
+> 💡 **Tip:** The current endpoint only handles regular chat. You need to add image generation logic that creates NFT data for the frontend!
+
+One way to setup the Chat Endpoint:
+```js
+app.post('/chat', async (req, res) => {
+  try {
+    const body: CompletionInput = req.body;
+
+    // Validate request body
+    if (!body.messages || !Array.isArray(body.messages)) {
+      return res.status(400).json({ 
+        error: 'Invalid request: messages array is required' 
+      } as APIError);
+    }
+
+    // Check if user wants to generate an image
+    const imageData = await handleGernarateImageCheck(body.messages);
+    let newNFT: NFTInterface | undefined;
+    let completionResult;
+
+    if (imageData.image) {
+      // Image was generated - create NFT and provide minting assistance
+      newNFT = {
+        image: imageData.image,
+        prompt: imageData.prompt!,
+        wallet: body.nft?.wallet || ''
+      };
+
+      completionResult = await handleCompletionWithNFT(body.messages, newNFT);
+    } else {
+      // General conversation
+      completionResult = await handleCompletion(body.messages);
+    }
+
+    // Prepare response with NFT data if available
+    const response: APISuccess = {
+      success: true,
+      result: {
+        output: {
+          ...completionResult.output,
+          ...(newNFT ? { nft: { image: newNFT.image, prompt: newNFT.prompt } } : {})
+        },
+        input: completionResult.input
       }
-    })
-  });
-  
-  // Returns: request_id : string
-}
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('Chat endpoint error:', error);
+    res.status(500).json({ 
+      error: API_RESPONSES.ERRORS.SERVER_ERROR,
+      details: error instanceof Error ? error.message : 'Unknown error'
+    } as APIError);
+  }
+});
 ```
 
-#### **Step 2: Poll for Results**
+#### **Step 2: 🔧 Implement Image Generation API**
+
+**Open [`backend/src/handlers/imageHandler.ts`](../backend/src/handlers/imageHandler.ts) and complete the `submitImageGenerationRequest` function:**
+
+**Your mission:**
+1. **Remove** the hardcoded return statement  
+2. **Implement** the API request to Flux.1-schnell endpoint
+3. **Use** the `IMAGE_CONFIG` constants for configuration
+4. **Follow** the step-by-step comments in the code
+
+> 💡 **Tip:** Check ThetaEdgeCloud's **Flux.1-schnell** model page → **API tab** → **JavaScript/Node.js** for the exact endpoint URL.
+> 
+> 🎯 **Your goal:** Successfully submit image requests and return the `request_id` for polling!
+
+#### **Step 3: Poll for Results**
 ```javascript
 async function pollForImageResult(requestId) {
   // Check every 2 seconds for up to 30 attempts (1 minute)

@@ -38,11 +38,9 @@ async function loadWalletFromKeystore(): Promise<ethers.HDNodeWallet | ethers.Wa
  * @returns Base64-encoded token URI string
  */
 function generateMetadata(nft: NFTInterface): string {
-  const metadata = {
-    name: nft.prompt,
-    image: nft.image,
-    description: `AI-generated NFT created from prompt: "${nft.prompt}"`,
-  };
+
+  // TODO: Implement the metadata generation here (Guide 06)
+  const metadata = {};
 
   const encoded = Buffer.from(JSON.stringify(metadata)).toString("base64");
   return `data:application/json;base64,${encoded}`;
@@ -131,21 +129,23 @@ export async function mintNFT(nft: NFTInterface): Promise<string> {
   console.log('Metadata length: ', metadata.length, ' characters');
   const contractABI = parseContractABI();
   
-  const contract = new ethers.Contract(
-    BLOCKCHAIN_CONFIG.NFT_CONTRACT!, 
-    contractABI, 
-    connectedWallet
-  );
-  
-  // Execute minting transaction
-  const tx = await contract.safeMint(nft.wallet, metadata);
-  console.log('Transaction submitted, waiting for confirmation...');
-  
-  // Wait for transaction confirmation
-  await tx.wait();
-  console.log('Transaction confirmed: ', tx.hash);
-  
-  return tx.hash;
+  // TODO: Replace this hardcoded response with actual minting transaction
+  // REMOVE the return statement below and implement the minting process
+  return '0x1234567890';
+
+  // STEP 1: Create the contract instance using ethers.js
+  // const contract = new ethers.Cont...
+
+  // STEP 2: Execute the safeMint transaction
+  // const tx = await cont...
+  // console.log('Transaction submitted, waiting for confirmation...');
+
+  // STEP 3: Wait for transaction confirmation  
+  // await tx.wait();
+  // console.log('Transaction confirmed: ', tx.hash);
+
+  // STEP 4: Return the transaction hash
+  // return tx.hash;
 }
 
 /**

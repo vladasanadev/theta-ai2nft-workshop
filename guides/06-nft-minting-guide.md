@@ -100,23 +100,11 @@ WALLET_PASSWORD=your-secure-password
 
 **Critical**: You must use the same wallet that deployed the contract!
 
-1. **Download your keystore** from Theta Web Wallet:
+1. **Download your keystore** from Theta Web Wallet (if not already done):
    - Go to wallet.thetatoken.org
    - Unlock your wallet
    - Click "Settings" → "Export Keystore"
-   - Save as `wallet-keystore.json` in your `backend/` folder
-
-2. **Verify file structure**:
-```json
-{
-  "version": 3,
-  "id": "...",
-  "address": "your-wallet-address",
-  "crypto": {
-    // Encrypted wallet data
-  }
-}
-```
+   - Add path to keystore file in your .env file
 
 #### **Step 2.2.3: Security Best Practices**
 
@@ -185,7 +173,7 @@ export async function filterWalletAddress(messages: Message[]): Promise<string |
 
 ### **3.4 Integration with Chat Flow**
 
-In your `server.ts`, this integrates into the existing flow:
+In your `server.ts`, this integrates into the existing flow of the `/chat` endpoint:
 
 ```javascript
 // Check if user wants to generate an image
@@ -259,16 +247,27 @@ In production, you should:
 - **Host metadata** - Use decentralized storage
 - **Optimize costs** - Balance permanence vs. expenses
 
-### **4.3 Metadata Generation Implementation**
+### **4.3 🔧 Your Implementation Challenge: NFT Metadata**
 
-#### **Our Enhanced Metadata Function**
+**Open [`backend/src/handlers/nftHandler.ts`](../backend/src/handlers/nftHandler.ts) and complete the `generateMetadata` function:**
+
+**Your mission:**
+1. **Create** the metadata object with required NFT standard fields
+2. **Add** `name`, `image`, and `description` properties  
+3. **Use** the NFT data passed to the function
+4. **Follow** ERC-721/TNT-721 metadata standards
+
+**Required metadata fields:**
+- **`name`**: A descriptive title based on the AI prompt
+- **`image`**: The generated image URL from EdgeCloud
+- **`description`**: An engaging description combining AI generation context
+
+**Implementation guide:**
 ```javascript
 function generateMetadata(nft: NFTInterface): string {
+  // TODO: Create metadata object with name, image, and description
   const metadata = {
-    name: `${nft.prompt}`,
-    image: nft.image,
-    description: `AI-generated NFT created from prompt: "${nft.prompt}"`,
-    ]
+    // Add your implementation here
   };
 
   // Encode as base64 for on-chain storage
@@ -276,6 +275,10 @@ function generateMetadata(nft: NFTInterface): string {
   return `data:application/json;base64,${encoded}`;
 }
 ```
+
+> 💡 **Tip:** Make the `name` and `description` engaging! Example: "AI Generated Sunset" with description "Created by AI from the prompt: 'beautiful sunset over mountains'"
+> 
+> 🎯 **Your goal:** Create compelling NFT metadata that showcases both the AI-generated image and the creative prompt behind it!
 
 #### **Metadata Breakdown**
 - **Name**: Descriptive title including the prompt
@@ -308,52 +311,34 @@ function generateMetadata(nft: NFTInterface): string {
    From keystore      Theta RPC URL     Wallet + Provider    ABI + Address    safeMint() call    Transaction hash
 ```
 
-### **5.3 Complete Minting Implementation**
+### **5.3 🔧 Your Implementation Challenge: Contract Interaction & Minting**
 
-#### **The Core Minting Function**
+**Open [`backend/src/handlers/nftHandler.ts`](../backend/src/handlers/nftHandler.ts) and complete the `mintNFT` function:**
+
+**Your mission:**
+1. **Remove** the hardcoded return statement (line 134)
+2. **Uncomment** the 4 implementation steps (STEP 1-4)
+3. **Create** contract instance with address, ABI, and connected wallet
+4. **Execute** the `safeMint()` function with recipient and metadata
+
+**Implementation guide:**
+- **STEP 1**: Create `ethers.Contract` instance using the three required parameters
+- **STEP 2**: Call `contract.safeMint()` with wallet address and metadata
+- **STEP 3**: Wait for transaction confirmation using `tx.wait()` 
+- **STEP 4**: Return the transaction hash (`tx.hash`)
+
+**Documentation reference:** [ethers.js Contract API](https://docs.ethers.org/v6/api/contract/#Contract)
+
+**Contract constructor signature:**
 ```javascript
-export async function mintNFT(nft: NFTInterface): Promise<string> {
-  // Step 1: Validate configuration
-  validateBlockchainConfig();
-  
-  // Step 2: Load wallet from keystore
-  const wallet = await loadWalletFromKeystore();
-  if (!wallet) {
-    throw new Error(API_RESPONSES.ERRORS.WALLET_NOT_FOUND);
-  }
-
-  // Step 3: Create provider and connect wallet
-  const provider = new ethers.JsonRpcProvider(BLOCKCHAIN_CONFIG.RPC_URL);
-  const connectedWallet = wallet.connect(provider);
-  
-  // Step 4: Check wallet balance for gas fees
-  const balance = await provider.getBalance(connectedWallet.address);
-  
-  if (balance === 0n) {
-    throw new Error(API_RESPONSES.ERRORS.INSUFFICIENT_BALANCE);
-  }
-
-  // Step 5: Generate metadata and create contract instance
-  const metadata = generateMetadata(nft);
-  const contractABI = parseContractABI();
-  
-  const contract = new ethers.Contract(
-    BLOCKCHAIN_CONFIG.NFT_CONTRACT!, 
-    contractABI, 
-    connectedWallet
-  );
-  
-  // Step 6: Execute minting transaction
-  const tx = await contract.safeMint(nft.wallet, metadata);
-  
-  // Step 7: Wait for transaction confirmation
-  await tx.wait();
-  
-  return tx.hash;
-}
+new ethers.Contract(address, abi, signerOrProvider)
 ```
 
-### **5.4 Understanding Each Step**
+> 💡 **Tip:** The `safeMint` function takes two parameters: recipient wallet address and token URI (metadata).
+> 
+> 🎯 **Your goal:** Successfully mint your AI-generated NFT to the blockchain and return the transaction hash!
+
+### **5.4 Understanding Each Step (mintNFT() function)**
 
 #### **Step 1: Configuration Validation**
 ```javascript
@@ -405,6 +390,52 @@ async function loadWalletFromKeystore(): Promise<ethers.HDNodeWallet | ethers.Wa
 - **tx.wait()** - Waits for blockchain confirmation
 - **Network finality** - Ensures transaction is permanent
 - **Returns**: Transaction receipt with details
+
+### **5.5 Understanding the Mint Endpoint Integration**
+
+The actual minting is triggered through the **`/mint` endpoint** in your backend:
+
+#### **How the Frontend Triggers Minting**
+When a user clicks the **"Mint NFT"** button on a generated image:
+
+1. **Frontend** sends POST request to `/mint` endpoint
+2. **Request body** contains: `{ image: string, prompt: string, wallet: string }`
+3. **Backend validates** the NFT data using `isMintable()` function
+4. **Backend calls** `mintNFT()` function you implemented
+5. **Response** returns transaction hash or error message
+
+#### **The Mint Endpoint Flow**
+```javascript
+// POST /mint endpoint in server.ts
+app.post('/mint', async (req, res) => {
+  try {
+    const nftData: NFTInterface = req.body;
+
+    // Validate NFT data completeness
+    if (!isMintable(nftData)) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: image, prompt, or valid wallet address'
+      });
+    }
+
+    // Execute minting transaction (calls your implemented function)
+    const txHash = await mintNFT(nftData);
+    
+    // Return success with transaction hash
+    res.json({ success: true, txHash });
+  } catch (error) {
+    // Handle minting errors
+    res.status(500).json({ error: 'Minting failed', details: error.message });
+  }
+});
+```
+
+#### **Frontend to Backend Communication**
+- **Frontend**: Mint button click → API request to `/mint`
+- **Backend**: Validates data → Calls your `mintNFT()` → Returns transaction hash
+- **Frontend**: Displays transaction hash and success message
+
+> 💡 **Key Point**: Your `mintNFT()` implementation is called by the `/mint` endpoint when users click the mint button in the UI!
 
 ---
 
@@ -620,7 +651,6 @@ In the final guide, you'll explore advanced AI capabilities:
 
 - **Prompt Optimization & Styling** - Master advanced prompt engineering techniques for better image generation
 - **RAG Chat API** - Implement knowledge-based LLMs with Retrieval-Augmented Generation
-- **Community Node Hosting** - Host your own LLM (Deepseek) on Theta EdgeCloud Community Nodes
 
 **Ready to unlock advanced AI capabilities?** Let's move on to [**Guide 7: Advanced Features & Customization**](./07-advanced-challenges-guide.md)!
 

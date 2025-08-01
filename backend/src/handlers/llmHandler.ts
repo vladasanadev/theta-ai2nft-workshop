@@ -46,33 +46,28 @@ function cleanMessagesForLLM(messages: Message[]): CleanMessage[] {
  */
 async function makeLLMRequest(messages: CleanMessage[]): Promise<LLMResponse> {
   try {
-    const response = await fetch(LLM_CONFIG.URL!, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${LLM_CONFIG.API_KEY}`,
-      },
-      body: JSON.stringify({
-        input: {
-          max_tokens: LLM_CONFIG.MAX_TOKENS,
-          messages: messages,
-          stream: LLM_CONFIG.STREAM,
-          temperature: LLM_CONFIG.TEMPERATURE,
-          top_p: LLM_CONFIG.TOP_P
-        }
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
-    }
-
-    const json = await response.json();
-    
+    // TODO: Replace this hardcoded response with actual EdgeCloud API call
+    // REMOVE the return statement below and implement the fetch request
     return {
-      output: json.body.infer_requests[0].output,
-      input: json.body.infer_requests[0].input
+      output: { message: 'Hello, world!' },
+      input: { messages: messages }
     };
+
+    // STEP 1: Implement the API request to the LLM on the EdgeCloud here
+    
+    // STEP 2: Uncomment the error checking
+    // if (!response.ok) {
+    //   throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+    // }
+
+    // STEP 3: Uncomment the response parsing
+    // const json = await response.json();
+    
+    // STEP 4: Uncomment the return statement
+    // return {
+    //   output: json.body.infer_requests[0].output,
+    //   input: json.body.infer_requests[0].input
+    // };
   } catch (error) {
     console.error('Error calling Theta EdgeCloud API:', error);
     throw error;

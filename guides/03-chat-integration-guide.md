@@ -99,7 +99,7 @@ Let's examine the key components:
 
 ```javascript
 app.post('/chat', async (req, res) => {
-  try {
+  try { 
     const body: CompletionInput = req.body;
 
     // Validate request body
@@ -109,51 +109,13 @@ app.post('/chat', async (req, res) => {
       } as APIError);
     }
 
-    // Check if user wants to generate an image
-    const imageData = await handleGernarateImageCheck(body.messages);
-    let newNFT: NFTInterface | undefined;
-    let oldNFT: NFTInterface = body.nft || {image: '', prompt: '', wallet: ''};
-    let completionResult;
-
-    if (imageData.image) {
-      // Image was generated - create NFT and provide minting assistance
-      newNFT = {
-        image: imageData.image,
-        prompt: imageData.prompt!,
-        wallet: body.nft?.wallet || ''
-      };
-
-      completionResult = await handleCompletionWithNFT(body.messages, newNFT);
-    } else {
-      // No image generation - check for wallet address or handle general chat
-      const walletAddress = await filterWalletAddress(body.messages);
-      
-      if (walletAddress && typeof walletAddress === 'string') {
-        oldNFT.wallet = walletAddress;
-        // Wallet address detected - acknowledge and update
-        completionResult = {
-          output: {
-            message: API_RESPONSES.WALLET_UPDATE_SUCCESS(walletAddress)
-          },
-          input: body.messages
-        };
-      } else {
-        // General conversation
-        completionResult = await handleCompletion(body.messages);
-      }
-    }
-
+    const completionResult = await handleCompletion(body.messages);
+    
     // Prepare response with NFT data if available
     const response: APISuccess = {
       success: true,
-      result: {
-        output: {
-          ...completionResult.output,
-          ...(newNFT ? { nft: { image: newNFT.image, prompt: newNFT.prompt } } : {})
-        },
-        input: completionResult.input
-      },
-      latestNFT: newNFT || oldNFT
+      result: completionResult,
+      latestNFT: body.nft
     };
 
     res.json(response);
@@ -182,41 +144,23 @@ export async function handleCompletion(messages: Message[]): Promise<LLMResponse
 }
 ```
 
-#### **EdgeCloud API Request** (`makeLLMRequest` function)
+### **2.3 🔧 Your Implementation Task: EdgeCloud API Request**
 
-```javascript
-async function makeLLMRequest(messages: CleanMessage[]): Promise<LLMResponse> {
-  const response = await fetch(LLM_CONFIG.URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${LLM_CONFIG.API_KEY}`,
-    },
-    body: JSON.stringify({
-      input: {
-        max_tokens: LLM_CONFIG.MAX_TOKENS,    // 1000 tokens
-        messages: messages,                    // Conversation history
-        stream: LLM_CONFIG.STREAM,            // false (no streaming)
-        temperature: LLM_CONFIG.TEMPERATURE,  // 0.7 (creativity level)
-        top_p: LLM_CONFIG.TOP_P              // 0.9 (response diversity)
-      }
-    })
-  });
+**Open [`backend/src/handlers/llmHandler.ts`](../backend/src/handlers/llmHandler.ts) and complete the `makeLLMRequest` function:**
 
-  if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
-  }
-  
-  // Parse and return EdgeCloud response
-  const json = await response.json();
-  return {
-    output: json.body.infer_requests[0].output,
-    input: json.body.infer_requests[0].input
-  };
-}
-```
+**Your mission:**
+1. **Remove** the hardcoded return statement (lines 51-54)
+2. **Implement** the actual API request using the commented steps
+3. **Use** the `LLM_CONFIG` constants for configuration values
+4. **Follow** the 4-step guide in the code comments
 
-### **2.3 Message Cleaning Process**
+   <img src="./images/edgecloud-ondemand-api.png" alt="EdgeCloud API tab example" width="600"/>
+
+> 💡 **Tip:** In ThetaEdgeCloud, when viewing your model, check the **API tab** and select **JavaScript/Node.js** for the exact implementation example.
+>
+> 🎯 **Your goal:** Make a `fetch()` request to the LLM endpoint with proper headers, body, and error handling!
+
+### **2.4 Message Cleaning Process**
 
 The `cleanMessagesForLLM` function removes frontend-specific data:
 

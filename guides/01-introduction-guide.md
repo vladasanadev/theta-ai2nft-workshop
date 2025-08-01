@@ -67,7 +67,7 @@ While we'll touch on all aspects of the application, **our main focus will be on
 - **Metadata Management**: Properly structuring NFT metadata
 - **Transaction Handling**: Managing blockchain operations
 
-#### **🎨 Guide 7: Advanced Challlenges** ([`07-advanced-features-customization.md`](./07-advanced-challenges-guide.md))
+#### **🎨 Guide 7: Advanced Challlenges** ([`07-advanced-challenges-guide.md`](./07-advanced-challenges-guide.md))
 - **Wallet Integration**: Seamless Web3 wallet connections
 - **Error Handling**: Robust error management across the stack
 - **Performance Optimization**: Scaling for production use

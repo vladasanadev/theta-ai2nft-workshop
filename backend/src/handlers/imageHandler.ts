@@ -181,38 +181,33 @@ export async function generateImage(prompt: string): Promise<string> {
  * @throws {Error} If submission fails
  */
 async function submitImageGenerationRequest(prompt: string): Promise<string> {
-  const response = await fetch(IMAGE_CONFIG.URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${IMAGE_CONFIG.API_TOKEN}`
-    },
-    body: JSON.stringify({
-      input: {
-        guidance: IMAGE_CONFIG.GUIDANCE,
-        height: IMAGE_CONFIG.HEIGHT,
-        width: IMAGE_CONFIG.WIDTH,
-        image2image_strength: IMAGE_CONFIG.IMAGE2IMAGE_STRENGTH,
-        num_steps: IMAGE_CONFIG.NUM_STEPS,
-        prompt: prompt,
-        seed: generateRandomSeed(),
-      }
-    })
-  });
+  try {
+    // TODO: Replace this hardcoded response with actual EdgeCloud API call
+    // REMOVE the return statement below and implement the fetch request
+    return '1234567890';
 
-  if (!response.ok) {
-    throw new Error(`Failed to submit image generation request: ${response.status} ${response.statusText}`);
-  }
+    // STEP 1: Implement the fetch request to Flux.1-schnell endpoint
 
-  const submitJson = await response.json();
-  
-  // Extract the request ID from the response
-  const inferRequest = submitJson.body?.infer_requests?.[0];
-  if (!inferRequest?.id) {
-    throw new Error('No request ID received from image generation API');
+
+    // STEP 2: Uncomment the error checking
+    // if (!response.ok) {
+    //   throw new Error(`Failed to submit image generation request: ${response.status} ${response.statusText}`);
+    // }
+
+    // STEP 3: Uncomment the response parsing
+    // const submitJson = await response.json();
+    
+    // STEP 4: Uncomment the request ID extraction
+    // const inferRequest = submitJson.body?.infer_requests?.[0];
+    // if (!inferRequest?.id) {
+    //   throw new Error('No request ID received from image generation API');
+    // }
+    
+    // return inferRequest.id;
+  } catch (error) {
+    console.error('Error submitting image generation request:', error);
+    throw error;
   }
-  
-  return inferRequest.id;
 }
 
 /**

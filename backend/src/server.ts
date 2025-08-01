@@ -46,51 +46,13 @@ app.post('/chat', async (req, res) => {
       } as APIError);
     }
 
-    // Check if user wants to generate an image
-    const imageData = await handleGernarateImageCheck(body.messages);
-    let newNFT: NFTInterface | undefined;
-    let oldNFT: NFTInterface = body.nft || {image: '', prompt: '', wallet: ''};
-    let completionResult;
-
-    if (imageData.image) {
-      // Image was generated - create NFT and provide minting assistance
-      newNFT = {
-        image: imageData.image,
-        prompt: imageData.prompt!,
-        wallet: body.nft?.wallet || ''
-      };
-
-      completionResult = await handleCompletionWithNFT(body.messages, newNFT);
-    } else {
-      // No image generation - check for wallet address or handle general chat
-      const walletAddress = await filterWalletAddress(body.messages);
-      
-      if (walletAddress && typeof walletAddress === 'string') {
-        oldNFT.wallet = walletAddress;
-        // Wallet address detected - acknowledge and update
-        completionResult = {
-          output: {
-            message: API_RESPONSES.WALLET_UPDATE_SUCCESS(walletAddress)
-          },
-          input: body.messages
-        };
-      } else {
-        // General conversation
-        completionResult = await handleCompletion(body.messages);
-      }
-    }
-
+    const completionResult = await handleCompletion(body.messages);
+    
     // Prepare response with NFT data if available
     const response: APISuccess = {
       success: true,
-      result: {
-        output: {
-          ...completionResult.output,
-          ...(newNFT ? { nft: { image: newNFT.image, prompt: newNFT.prompt } } : {})
-        },
-        input: completionResult.input
-      },
-      latestNFT: newNFT || oldNFT
+      result: completionResult,
+      latestNFT: body.nft
     };
 
     res.json(response);
