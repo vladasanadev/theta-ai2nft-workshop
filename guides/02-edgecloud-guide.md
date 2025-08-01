@@ -140,7 +140,7 @@ curl -X POST "https://ondemand.thetaedgecloud.com/infer_request/llama_3_1_70b/co
    # LLM (Language Model) Configuration
    # =============================================
    LLM_URL=https://ondemand.thetaedgecloud.com/infer_request/llama_3_1_70b/completions
-   LLM_API_KEY=YOUR_ACCESS_TOKEN_HERE
+   ON_DEMAND_API_ACCESS_TOKEN=YOUR_ACCESS_TOKEN_HERE
 
    # =============================================
    # Image Generation Configuration  

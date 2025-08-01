@@ -144,7 +144,6 @@ export type CleanMessage = Omit<Message, 'nft'>;
  */
 export interface EnvironmentConfig {
   LLM_URL?: string;
-  LLM_API_KEY?: string;
   ON_DEMAND_API_ACCESS_TOKEN?: string;
   RPC_URL?: string;
   NFT_CONTRACT?: string;

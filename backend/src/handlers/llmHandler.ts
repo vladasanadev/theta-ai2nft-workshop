@@ -20,7 +20,7 @@ function validateLLMConfig(): void {
   }
   
   if (!LLM_CONFIG.API_KEY) {
-    throw new Error(API_RESPONSES.ERRORS.LLM_API_KEY_MISSING);
+    throw new Error(API_RESPONSES.ERRORS.ON_DEMAND_API_ACCESS_TOKEN_MISSING);
   }
 }
 

@@ -317,7 +317,7 @@ You can inspect:
 - Look for CORS errors in browser console
 
 #### **"LLM_URL environment variable is not set"**
-- Verify your backend `.env` file has `LLM_URL` and `LLM_API_KEY`
+- Verify your backend `.env` file has `LLM_URL` and `ON_DEMAND_API_ACCESS_TOKEN`
 - Restart the backend server after changing `.env`
 
 #### **"Invalid access token" or 401 errors**

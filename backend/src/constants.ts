@@ -21,7 +21,7 @@ export const SERVER_CONFIG = {
  */
 export const LLM_CONFIG = {
   get URL() { return process.env.LLM_URL; },
-  get API_KEY() { return process.env.LLM_API_KEY; },
+  get API_KEY() { return process.env.ON_DEMAND_API_ACCESS_TOKEN; },
   get TEMPERATURE() { return parseFloat(process.env.TEMPERATURE || '0.7'); },
   get TOP_P() { return parseFloat(process.env.TOP_P || '0.9'); },
   get MAX_TOKENS() { return parseInt(process.env.MAX_TOKENS || '1000'); },
@@ -73,7 +73,7 @@ export const API_RESPONSES = {
     INCOMPLETE_NFT_DATA: 'Incomplete NFT data',
     MINTING_FAILED: 'Minting failed',
     LLM_URL_MISSING: 'LLM_URL environment variable is not set',
-    LLM_API_KEY_MISSING: 'LLM_API_KEY environment variable is not set',
+    ON_DEMAND_API_ACCESS_TOKEN_MISSING: 'ON_DEMAND_API_ACCESS_TOKEN environment variable is not set',
     IMAGE_API_TOKEN_MISSING: 'ON_DEMAND_API_ACCESS_TOKEN environment variable is not set',
     WALLET_NOT_FOUND: 'Wallet not found',
     INSUFFICIENT_BALANCE: 'Insufficient balance for gas fees',
