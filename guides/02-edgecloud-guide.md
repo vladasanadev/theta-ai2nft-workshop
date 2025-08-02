@@ -262,7 +262,3 @@ Excellent work! Your EdgeCloud environment is now configured and ready. In the n
 - Build the chat API endpoints
 
 **Ready to continue?** Let's move on to [**Guide 3: Chat Integration**](./03-chat-integration-guide.md)!
-
----
-
-> 💡 **Pro Tip**: Bookmark the [Theta EdgeCloud API Documentation](https://docs.thetatoken.org/docs/theta-edgecloud-overview) for reference throughout the workshop. You'll find detailed examples and parameter explanations there!

@@ -14,6 +14,45 @@ By the end of this guide, you'll have:
 
 ---
 
+## 📂 Step 0: Clone the Workshop Repository
+
+Before we begin with the integration, you'll need to get the project files on your local machine.
+
+### **0.1 Clone the Repository**
+
+1. **Open your terminal/command prompt**
+
+2. **Navigate to your desired directory**
+   ```bash
+   cd ~/Documents  # or wherever you want to store the project
+   ```
+
+3. **Clone the repository**
+   ```bash
+   git clone https://github.com/Pizajolo/theta-ai2nft-workshop.git
+   ```
+
+4. **Navigate into the project directory**
+   ```bash
+   cd theta-ai2nft-workshop
+   ```
+
+### **0.2 Explore the Project Structure**
+
+You should now see the following directories:
+```
+theta-ai2nft-workshop/
+├── backend/          # Node.js backend with AI and blockchain integration
+├── frontend/         # React.js user interface
+├── contracts/        # Smart contract files
+├── guides/          # Workshop guides (including this one!)
+└── README.md        # Project overview
+```
+
+> 💡 **Tip:** If you don't have Git installed, you can download the repository as a ZIP file from GitHub and extract it to your desired location.
+
+---
+
 ## 🚀 Step 1: Set Up the Frontend
 
 ### **1.1 Frontend Environment Configuration**
