@@ -9,7 +9,7 @@ In this hands-on workshop, you'll learn how to build a complete AI-powered NFT c
 You'll create an **AI to NFT Workshop** application that:
 - **Generates images** from text prompts using state-of-the-art AI models
 - **Processes conversations** with an intelligent AI assistant
-- **Interact with the Theta Blockchain** Mints NFTs automatically from generated images
+- **Interacts with the Theta Blockchain** Minting NFTs automatically from generated images
 
 <img src="./images/workshop-result.png" alt="Llama 3.1 and Flux.1-schnell" width="600"/>
 
