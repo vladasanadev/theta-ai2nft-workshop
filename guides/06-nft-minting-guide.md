@@ -176,29 +176,51 @@ export async function filterWalletAddress(messages: Message[]): Promise<string |
 In your `server.ts`, this integrates into the existing flow of the `/chat` endpoint:
 
 ```javascript
-// Check if user wants to generate an image
-const imageData = await handleGernarateImageCheck(body.messages);
+    // Check if user wants to generate an image
+    const imageData = await handleGernarateImageCheck(body.messages);
+    let newNFT: NFTInterface | undefined;
+    let oldNFT: NFTInterface = body.nft || {image: '', prompt: '', wallet: ''};
+    let completionResult;
 
-if (imageData.image) {
-  // Image generation path...
-} else {
-  // No image - check for wallet address
-  const walletAddress = await filterWalletAddress(body.messages);
-  
-  if (walletAddress && typeof walletAddress === 'string') {
-    // Wallet address detected - update NFT data
-    oldNFT.wallet = walletAddress;
-    completionResult = {
-      output: {
-        message: API_RESPONSES.WALLET_UPDATE_SUCCESS(walletAddress)
+    if (imageData.image) {
+      // Image was generated - create NFT and provide minting assistance
+      newNFT = {
+        image: imageData.image,
+        prompt: imageData.prompt!,
+        wallet: body.nft?.wallet || ''
+      };
+
+      completionResult = await handleCompletionWithNFT(body.messages, newNFT);
+    } else {
+      // No image generation - check for wallet address or handle general chat
+      const walletAddress = await filterWalletAddress(body.messages);
+      
+      if (walletAddress && typeof walletAddress === 'string') {
+        oldNFT.wallet = walletAddress;
+        // Wallet address detected - acknowledge and update
+        completionResult = {
+          output: {
+            message: API_RESPONSES.WALLET_UPDATE_SUCCESS(walletAddress)
+          },
+          input: body.messages
+        };
+      } else {
+        // General conversation
+        completionResult = await handleCompletion(body.messages);
+      }
+    }
+    // Prepare response with NFT data if available
+    const response: APISuccess = {
+      success: true,
+      result: {
+        output: {
+          ...completionResult.output,
+          ...(newNFT ? { nft: { image: newNFT.image, prompt: newNFT.prompt } } : {})
+        },
+        input: completionResult.input
       },
-      input: body.messages
+      latestNFT: newNFT || oldNFT
     };
-  } else {
-    // Regular conversation
-    completionResult = await handleCompletion(body.messages);
-  }
-}
 ```
 
 ---

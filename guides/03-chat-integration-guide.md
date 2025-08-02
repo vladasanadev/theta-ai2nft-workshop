@@ -14,45 +14,6 @@ By the end of this guide, you'll have:
 
 ---
 
-## 📂 Step 0: Clone the Workshop Repository
-
-Before we begin with the integration, you'll need to get the project files on your local machine.
-
-### **0.1 Clone the Repository**
-
-1. **Open your terminal/command prompt**
-
-2. **Navigate to your desired directory**
-   ```bash
-   cd ~/Documents  # or wherever you want to store the project
-   ```
-
-3. **Clone the repository**
-   ```bash
-   git clone https://github.com/Pizajolo/theta-ai2nft-workshop.git
-   ```
-
-4. **Navigate into the project directory**
-   ```bash
-   cd theta-ai2nft-workshop
-   ```
-
-### **0.2 Explore the Project Structure**
-
-You should now see the following directories:
-```
-theta-ai2nft-workshop/
-├── backend/          # Node.js backend with AI and blockchain integration
-├── frontend/         # React.js user interface
-├── contracts/        # Smart contract files
-├── guides/          # Workshop guides (including this one!)
-└── README.md        # Project overview
-```
-
-> 💡 **Tip:** If you don't have Git installed, you can download the repository as a ZIP file from GitHub and extract it to your desired location.
-
----
-
 ## 🚀 Step 1: Set Up the Frontend
 
 ### **1.1 Frontend Environment Configuration**
@@ -315,7 +276,7 @@ When you send a message, here's what happens behind the scenes:
 
 ---
 
-## 🔍 Step 4: Debugging and Monitoring
+## 🔍 Step 4: Debugging and Monitoring (Skip if not needed)
 
 ### **4.1 Backend Logs**
 
@@ -410,26 +371,6 @@ Before moving to the next guide, ensure:
 - [ ] **LLM responses are intelligent** and contextually appropriate
 - [ ] **No console errors** in browser or backend
 - [ ] **Conversation history works** (AI remembers previous messages)
-
----
-
-## 🔧 Advanced Testing
-
-### **5.1 Test Conversation Context**
-
-Try this multi-turn conversation to test memory:
-
-1. **You**: "My name is Alex and I'm learning about AI"
-2. **AI**: (Should respond and acknowledge your name)
-3. **You**: "What did I just tell you my name was?"
-4. **AI**: (Should remember "Alex")
-
-### **5.2 Test Error Recovery**
-
-1. Stop your backend server (`Ctrl+C`)
-2. Try sending a message from frontend
-3. You should see: "Sorry, I encountered an error. Please try again."
-4. Restart backend and verify chat works again
 
 ---
 

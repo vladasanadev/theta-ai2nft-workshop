@@ -118,9 +118,48 @@ curl -X POST "https://ondemand.thetaedgecloud.com/infer_request/llama_3_1_70b/co
 
 ---
 
-## ⚙️ Step 3: Configure Your Development Environment
+## ⚙️ Step 3: Get the Workshop Code
 
-### **3.1 Set Up Environment Variables**
+Before we configure the environment, you'll need to get the project files on your local machine.
+
+### **3.1 Clone the Repository**
+
+1. **Open your terminal/command prompt**
+
+2. **Navigate to your desired directory**
+   ```bash
+   cd ~/Documents  # or wherever you want to store the project
+   ```
+
+3. **Clone the repository**
+   ```bash
+   git clone https://github.com/Pizajolo/theta-ai2nft-workshop.git
+   ```
+
+4. **Navigate into the project directory**
+   ```bash
+   cd theta-ai2nft-workshop
+   ```
+
+### **3.2 Explore the Project Structure**
+
+You should now see the following directories:
+```
+theta-ai2nft-workshop/
+├── backend/          # Node.js backend with AI and blockchain integration
+├── frontend/         # React.js user interface
+├── contracts/        # Smart contract files
+├── guides/          # Workshop guides (including this one!)
+└── README.md        # Project overview
+```
+
+> 💡 **Tip:** If you don't have Git installed, you can download the repository as a ZIP file from GitHub and extract it to your desired location.
+
+---
+
+## ⚙️ Step 4: Configure Your Development Environment
+
+### **4.1 Set Up Environment Variables**
 
 1. **Navigate to Backend Directory**
    ```bash
@@ -159,7 +198,7 @@ curl -X POST "https://ondemand.thetaedgecloud.com/infer_request/llama_3_1_70b/co
    - Replace `YOUR_ACCESS_TOKEN_HERE` with the access token you created in Step 2.2
    - Make sure there are no extra spaces or quotes around the token
 
-### **3.2 Important Security Notes**
+### **4.2 Important Security Notes**
 
 ⚠️ **Never commit your .env file to version control!**
 
@@ -169,9 +208,9 @@ curl -X POST "https://ondemand.thetaedgecloud.com/infer_request/llama_3_1_70b/co
 
 ---
 
-## 🧪 Step 4: Test Your Setup
+## 🧪 Step 5: Test Your Setup
 
-### **4.1 Install Dependencies**
+### **5.1 Install Dependencies**
 
 ```bash
 # Make sure you're in the backend directory
@@ -181,7 +220,7 @@ cd backend
 npm install
 ```
 
-### **4.2 Start the Development Server**
+### **5.2 Start the Development Server**
 
 ```bash
 # Start the backend server
@@ -194,7 +233,7 @@ You should see output similar to:
 📊 Health check available at http://localhost:4000/health
 ```
 
-### **4.3 Test the Health Endpoint**
+### **5.3 Test the Health Endpoint**
 
 Open your browser or use curl to test:
 
@@ -211,7 +250,7 @@ Expected response:
 }
 ```
 
-### **4.4 Test API Integration**
+### **5.4 Test API Integration**
 
 We'll test the EdgeCloud integration in the next guide, but for now, make sure your server starts without environment variable errors.
 

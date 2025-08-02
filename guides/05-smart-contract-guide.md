@@ -91,7 +91,7 @@ contract AINFT is TNT721, TNT721Enumerable, TNT721URIStorage, Ownable {
 
 ### **2.2 Key Functions Explained**
 
-#### **Constructor**
+#### **Constructor** [Our Smart Contract](../contracts/nft-contract.sol)
 ```solidity
 constructor() TNT721("AI NFT", "AINFT") Ownable() {}
 ```
