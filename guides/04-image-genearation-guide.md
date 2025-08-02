@@ -10,7 +10,6 @@ By the end of this guide, you'll have:
 - ✅ **Intelligent Intent Detection** - AI determines when users want images
 - ✅ **Flux.1-schnell Integration** - High-quality image generation
 - ✅ **Prompt Extraction** - Automatic optimization of user requests
-- ✅ **Async Processing** - Handle long-running image generation
 
 ---
 
@@ -435,53 +434,11 @@ Status check failed (attempt 5): 202  # Still processing
 - EdgeCloud service temporarily unavailable
 - Insufficient credits
 
-### **5.2 Testing Edge Cases**
-
-#### **Test Ambiguous Requests**
-```
-"I'm thinking about art"  # Should NOT generate image
-"What do you think about creativity?"  # Should NOT generate image
-"Colors are beautiful"  # Should NOT generate image
-```
-
-#### **Test Clear Non-Image Requests**
-```
-"What's 2 + 2?"  # Should NOT generate image
-"Tell me about blockchain"  # Should NOT generate image
-"How are you doing?"  # Should NOT generate image
-```
-
-#### **Test Borderline Cases**
-```
-"I wish I could see a rainbow"  # Might generate image
-"Imagine a perfect sunset"  # Might generate image
-"Describe a beautiful garden"  # Should NOT generate (description ≠ image)
-```
-
 ---
 
 ## 🎨 Step 6: Advanced Image Generation
 
-### **6.1 Prompt Optimization Tips**
-
-The system automatically optimizes prompts, but understanding helps:
-
-#### **Good Prompts**
-```
-✅ "majestic dragon"
-✅ "cyberpunk cityscape"
-✅ "peaceful mountain lake"
-✅ "abstract geometric patterns"
-```
-
-#### **Less Optimal Prompts**
-```
-⚠️ "something cool" (too vague)
-⚠️ "like that thing we talked about" (no context)
-⚠️ "you know what I mean" (unclear)
-```
-
-### **6.2 Understanding Generation Parameters**
+### **Understanding Generation Parameters**
 
 You can modify these in your backend `.env`:
 

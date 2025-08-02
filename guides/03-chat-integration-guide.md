@@ -10,7 +10,6 @@ By the end of this guide, you'll have:
 - ✅ **Frontend running** - Complete user interface for chat interactions
 - ✅ **LLM integration working** - Real conversations with Llama 3.1 70B
 - ✅ **Chat flow understanding** - Know how messages flow through your system
-- ✅ **Error handling** - Robust conversation management
 
 ---
 
@@ -276,55 +275,7 @@ When you send a message, here's what happens behind the scenes:
 
 ---
 
-## 🔍 Step 4: Debugging and Monitoring (Skip if not needed)
-
-### **4.1 Backend Logs**
-
-Watch your backend console for useful information:
-
-```bash
-# In your backend terminal, you should see:
-🚀 AI to NFT Workshop Backend running on http://localhost:4000
-📊 Health check available at http://localhost:4000/health
-
-# When you send messages, you might see:
-Generating image with prompt: ... (for image requests)
-```
-
-### **4.2 Browser Developer Tools**
-
-1. **Open Browser DevTools** (F12)
-2. **Go to Network Tab**
-3. **Send a chat message**
-4. **Look for requests to** `http://localhost:4000/chat`
-
-You can inspect:
-- **Request payload** - What the frontend sends
-- **Response data** - What the backend returns
-- **Status codes** - Success (200) or errors (400, 500)
-
-### **4.3 Common Issues and Solutions**
-
-#### **Message Not Sending**
-- Check that both servers are running
-- Verify `REACT_APP_BACKEND_URL=http://localhost:4000` in frontend `.env`
-- Look for CORS errors in browser console
-
-#### **"LLM_URL environment variable is not set"**
-- Verify your backend `.env` file has `LLM_URL` and `ON_DEMAND_API_ACCESS_TOKEN`
-- Restart the backend server after changing `.env`
-
-#### **"Invalid access token" or 401 errors**
-- Check your EdgeCloud access token is correct
-- Verify you have credits remaining in your EdgeCloud account
-
-#### **Slow responses**
-- This is normal! LLM processing can take 3-10 seconds
-- Larger models like Llama 3.1 70B are thorough but take time
-
----
-
-## 🎨 Step 5: Customize Your AI Assistant
+## 🎨 Step 4: Customize Your AI Assistant
 
 ### **5.1 Adjust LLM Parameters**
 
