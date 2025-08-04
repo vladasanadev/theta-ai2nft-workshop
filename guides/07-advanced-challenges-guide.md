@@ -6,6 +6,7 @@
 
 - **🎨 Prompt Engineering Mastery** - Advanced techniques for consistent, high-quality image generation
 - **🧠 RAG Chat Integration** - Knowledge-based AI with Retrieval-Augmented Generation
+- **🖥️ Community Node Deployment** - Deploy DeepSeek on decentralized infrastructure 
 - **🎭 Creative Extensions** - Unique features to differentiate your platform
 
 ---
@@ -262,9 +263,156 @@ const response = await fetch(RAG_CONFIG.URL, {
 
 ---
 
-## 🎭 Chapter 3: Improve NFTs
+## 🖥️ Chapter 3: Community Node Deployment
 
-### **3.1 Add Decentralized Storage**
+### **3.1 What are Community Nodes?**
+
+**Community Nodes** are decentralized GPU nodes operated by Theta Network community members. They offer:
+
+- **Cost-effective hosting** - Often cheaper than centralized cloud providers
+- **Decentralized infrastructure** - No single point of failure
+- **High-performance GPUs** - RTX 30/40 series for powerful AI inference
+- **Dedicated resources** - Your own private model deployment
+- **Global distribution** - Nodes worldwide for lower latency
+
+### **3.2 Why Deploy DeepSeek on Community Nodes?**
+
+**DeepSeek Distill-Qwen-7B** is a powerful and efficient model perfect for:
+- **Advanced reasoning** - Better problem-solving capabilities
+- **Code generation** - Enhanced programming assistance  
+- **Cost optimization** - Smaller models with excellent performance
+- **Private deployment** - Your own dedicated instance
+
+### **3.3 🔧 Your Implementation Challenge: Deploy DeepSeek**
+
+#### **Step 1: Access Dedicated Deployments**
+
+1. **Navigate to Theta EdgeCloud dashboard**
+2. **Go to "Dedicated Deployments"** section
+3. **Click "New Deployment"**
+
+   <img src="./images/edgecloud-community-nodes.png" alt="Deepseek Dedicated deployment on community node" width="600"/>
+
+#### **Step 2: Choose Your Model**
+
+**Select the model:**
+- **DeepSeek R1 / Distill-Qwen-7B** - Efficient 7B parameter model, great performance/cost ratio
+
+#### **Step 3: Select Community Node**
+
+**Filter by GPU requirements:**
+- **RTX 4090** - Highest performance, premium pricing
+- **RTX 4080/4070** - Excellent performance, good value
+- **RTX 3090/3080** - Strong performance, budget-friendly
+
+**Consider node factors:**
+- **Pricing** - Compare hourly rates
+- **Specs** - GPU, connection speed ...
+
+### **3.4 Integration with Your AI2NFT Platform**
+
+#### **Step 1: Update Environment Variables**
+
+Add to your `.env` file:
+```bash
+# Community Node Deployment
+DEEPSEEK_ENDPOINT=https://your-deployment-id.edge-deploy.com/v1/completions
+
+# Toggle between different LLM providers
+USE_COMMUNITY_NODE=true
+```
+
+#### **Step 2: Modify LLM Handler**
+
+**Enhance your `llmHandler.ts` to support community node:**
+
+```javascript
+// Add to constants.ts
+export const COMMUNITY_NODE_CONFIG = {
+  get ENDPOINT() { return process.env.DEEPSEEK_ENDPOINT; },
+  get API_KEY() { return process.env.DEEPSEEK_API_KEY; },
+  get USE_COMMUNITY_NODE() { return process.env.USE_COMMUNITY_NODE === 'true'; },
+} as const;
+
+// Update makeLLMRequest function
+async function makeLLMRequest(messages: CleanMessage[]): Promise<LLMResponse> {
+  try {
+    let endpoint, headers;
+    
+    if (COMMUNITY_NODE_CONFIG.USE_COMMUNITY_NODE) {
+      // Use Community Node Deployment
+      endpoint = COMMUNITY_NODE_CONFIG.ENDPOINT;
+      headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${COMMUNITY_NODE_CONFIG.API_KEY}` // if authentication is set at deployment
+      };
+    } else if (RAG_CONFIG.USE_RAG) {
+      // Use RAG API
+      endpoint = RAG_CONFIG.URL;
+      headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RAG_CONFIG.AUTH_TOKEN}`
+      };
+    } else {
+      // Use standard EdgeCloud
+      endpoint = LLM_CONFIG.URL;
+      headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${LLM_CONFIG.API_KEY}`
+      };
+    }
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        messages,
+        max_tokens: 1000,
+        temperature: 0.7
+      })
+    });
+
+    // Handle response...
+  } catch (error) {
+    console.error('Error calling LLM API:', error);
+    throw error;
+  }
+}
+```
+
+### **3.5 Testing Your Community Node Deployment**
+
+#### **Performance Testing**
+Test these scenarios to compare performance:
+
+```javascript
+// Test advanced reasoning
+"Solve this logic puzzle: If all roses are flowers, and some flowers fade quickly, can we conclude that some roses fade quickly?"
+
+// Test code generation  
+"Write a Python function to calculate fibonacci numbers with memoization"
+
+// Test creative tasks
+"Write a haiku about decentralized AI"
+```
+
+#### **Compare Results**
+- **EdgeCloud On-Demand**: Shared resources, consistent performance
+- **Community Node**: Dedicated resources, potentially faster responses
+- **Cost Analysis**: Monitor usage costs across different deployments
+
+### **3.6 Advanced Community Node Features**
+
+#### **Docker Container Deployment**
+For ultimate customization, you can deploy your own Docker containers:
+
+
+
+---
+
+## 🎭 Chapter 4: Improve NFTs
+
+### **4.1 Add Decentralized Storage**
 
 Improve permanence of your NFTs by uploading the images and metadata to IPFS or Arweave.
 
@@ -276,7 +424,7 @@ Improve permanence of your NFTs by uploading the images and metadata to IPFS or 
 
 > 💡 **Tip:** Start with IPFS for easier integration, then consider Arweave for permanent storage in production.
 
-### **3.2 Multi-Style Generation**
+### **4.2 Multi-Style Generation**
 
 **Let users choose their preferred art style:**
 
@@ -292,7 +440,7 @@ export const ART_STYLES = {
 } as const;
 ```
 
-### **3.3 NFT Collections & Series**
+### **4.3 NFT Collections & Series**
 
 **Create themed NFT collections:**
 
