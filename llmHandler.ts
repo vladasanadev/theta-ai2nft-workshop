@@ -69,6 +69,20 @@ async function makeLLMRequest(messages: CleanMessage[]): Promise<LLMResponse> {
         input: {
           //   max_tokens: 500,
           max_tokens: LLM_CONFIG.MAX_TOKENS,
+
+          //   messages: [
+          //     {
+          //       role: "system",
+          //       content: "You are a helpfule assistant",
+          //     },
+          //     {
+          //       role: "user",
+          //       content: "What is Theta Network",
+          //     },
+          //   ],
+          //   stream: true,
+          //   temperature: 0.5,
+          //   top_p: 0.7,
           messages: messages,
           stream: false,
           temperature: LLM_CONFIG.TEMPERATURE,
@@ -79,6 +93,9 @@ async function makeLLMRequest(messages: CleanMessage[]): Promise<LLMResponse> {
 
     const json = await response.json();
 
+    console.log(json);
+
+    // STEP 2: Uncomment the error checking
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
     }

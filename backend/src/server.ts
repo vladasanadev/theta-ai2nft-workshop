@@ -36,7 +36,7 @@ app.use(express.json());
  * Response: { success: true, result: CompletionResult, latestNFT?: NFTInterface }
  */
 app.post('/chat', async (req, res) => {
-  try { 
+  try {
     const body: CompletionInput = req.body;
 
     // Validate request body
@@ -46,13 +46,35 @@ app.post('/chat', async (req, res) => {
       } as APIError);
     }
 
-    const completionResult = await handleCompletion(body.messages);
-    
+    // Check if user wants to generate an image
+    const imageData = await handleGernarateImageCheck(body.messages);
+    let newNFT: NFTInterface | undefined;
+    let completionResult;
+
+    if (imageData.image) {
+      // Image was generated - create NFT and provide minting assistance
+      newNFT = {
+        image: imageData.image,
+        prompt: imageData.prompt!,
+        wallet: body.nft?.wallet || ''
+      };
+
+      completionResult = await handleCompletionWithNFT(body.messages, newNFT);
+    } else {
+      // General conversation
+      completionResult = await handleCompletion(body.messages);
+    }
+
     // Prepare response with NFT data if available
     const response: APISuccess = {
       success: true,
-      result: completionResult,
-      latestNFT: body.nft
+      result: {
+        output: {
+          ...completionResult.output,
+          ...(newNFT ? { nft: { image: newNFT.image, prompt: newNFT.prompt } } : {})
+        },
+        input: completionResult.input
+      }
     };
 
     res.json(response);

@@ -38,12 +38,59 @@ async function loadWalletFromKeystore(): Promise<ethers.HDNodeWallet | ethers.Wa
  * @returns Base64-encoded token URI string
  */
 function generateMetadata(nft: NFTInterface): string {
-
-  // TODO: Implement the metadata generation here (Guide 06)
-  const metadata = {};
+  // Create metadata object with name, image, and description
+  const metadata = {
+    name: generateNFTName(nft.prompt),
+    image: nft.image,
+    description: `Created by AI from the prompt: "${nft.prompt}". This unique digital artwork was generated using artificial intelligence and represents a one-of-a-kind piece in the AI art collection.`,
+    attributes: [
+      {
+        trait_type: "Category",
+        value: "AI Generated"
+      },
+      {
+        trait_type: "Creation Method",
+        value: "Artificial Intelligence"
+      },
+      {
+        trait_type: "Prompt Length",
+        value: nft.prompt.length.toString()
+      }
+    ]
+  };
 
   const encoded = Buffer.from(JSON.stringify(metadata)).toString("base64");
   return `data:application/json;base64,${encoded}`;
+}
+
+/**
+ * Generates an engaging NFT name based on the prompt
+ * Extracts key words and creates a compelling title
+ * @param prompt - The AI generation prompt
+ * @returns A friendly, engaging NFT name
+ */
+function generateNFTName(prompt: string): string {
+  // Clean and process the prompt
+  const words = prompt.toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .split(/\s+/)
+    .filter(word => word.length > 2);
+  
+  // Remove common stop words
+  const stopWords = ['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'];
+  const meaningfulWords = words.filter(word => !stopWords.includes(word));
+  
+  // Take first 2-3 meaningful words and capitalize them
+  const keyWords = meaningfulWords.slice(0, 3).map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  );
+  
+  // Create the name
+  if (keyWords.length === 0) {
+    return "AI Generated Masterpiece";
+  }
+  
+  return `AI Generated ${keyWords.join(' ')}`;
 }
 
 /**
@@ -129,23 +176,23 @@ export async function mintNFT(nft: NFTInterface): Promise<string> {
   console.log('Metadata length: ', metadata.length, ' characters');
   const contractABI = parseContractABI();
   
-  // TODO: Replace this hardcoded response with actual minting transaction
-  // REMOVE the return statement below and implement the minting process
-  return '0x1234567890';
-
   // STEP 1: Create the contract instance using ethers.js
-  // const contract = new ethers.Cont...
+  const contract = new ethers.Contract(
+    BLOCKCHAIN_CONFIG.NFT_CONTRACT!,
+    contractABI,
+    connectedWallet
+  );
 
   // STEP 2: Execute the safeMint transaction
-  // const tx = await cont...
-  // console.log('Transaction submitted, waiting for confirmation...');
+  const tx = await contract.safeMint(nft.wallet, metadata);
+  console.log('Transaction submitted, waiting for confirmation...');
 
   // STEP 3: Wait for transaction confirmation  
-  // await tx.wait();
-  // console.log('Transaction confirmed: ', tx.hash);
+  await tx.wait();
+  console.log('Transaction confirmed: ', tx.hash);
 
   // STEP 4: Return the transaction hash
-  // return tx.hash;
+  return tx.hash;
 }
 
 /**

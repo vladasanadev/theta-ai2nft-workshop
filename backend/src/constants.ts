@@ -22,9 +22,9 @@ export const SERVER_CONFIG = {
 export const LLM_CONFIG = {
   get URL() { return process.env.LLM_URL; },
   get API_KEY() { return process.env.ON_DEMAND_API_ACCESS_TOKEN; },
-  get TEMPERATURE() { return parseFloat(process.env.TEMPERATURE || '0.7'); },
-  get TOP_P() { return parseFloat(process.env.TOP_P || '0.9'); },
-  get MAX_TOKENS() { return parseInt(process.env.MAX_TOKENS || '1000'); },
+  get TEMPERATURE() { return parseFloat(process.env.TEMPERATURE || '0.9'); },
+  get TOP_P() { return parseFloat(process.env.TOP_P || '0.2'); },
+  get MAX_TOKENS() { return parseInt(process.env.MAX_TOKENS || '500'); },
   STREAM: false,
 } as const;
 
